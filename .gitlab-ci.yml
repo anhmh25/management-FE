@@ -1,46 +1,46 @@
-print-env:
-  stage: test
+# print-env:
+#   stage: test
+#   script:
+#     - echo "Các biến CI/CD có sẵn:"
+#     - printenv | sort
+#   tags:
+#     - shell
+
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  RELEASE_NAME: management-fe
+  HELM_CHART_PATH: helm-chart/management-FE
+  KUBE_CONTEXT: gitlab-context
+
+build:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:20.10-dind
   script:
-    - echo "Các biến CI/CD có sẵn:"
-    - printenv | sort
-  tags:
-    - shell
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
 
-# stages:
-#   - build
-#   - deploy
+deploy:
+  stage: deploy
+  image: alpine/helm:3.14.0
+  script:
+    - echo "$KUBE_CA_PEM" > ca.crt
+    - kubectl config set-cluster k8s-cluster --server=https://gitlab.anhmh.cloud/ --certificate-authority=ca.crt --embed-certs=true
+    - kubectl config set-credentials deployer --token=$KUBE_TOKEN
+    - kubectl config set-context $KUBE_CONTEXT --cluster=k8s-cluster --user=deployer --namespace=$KUBE_NAMESPACE
+    - kubectl config use-context $KUBE_CONTEXT
 
-# variables:
-#   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-#   RELEASE_NAME: management-fe
-#   HELM_CHART_PATH: helm-chart/management-FE
-#   KUBE_CONTEXT: gitlab-context
-
-# build:
-#   stage: build
-#   image: docker:20.10
-#   services:
-#     - docker:20.10-dind
-#   script:
-#     - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-#     - docker build -t $IMAGE_TAG .
-#     - docker push $IMAGE_TAG
-
-# deploy:
-#   stage: deploy
-#   image: alpine/helm:3.14.0
-#   script:
-#     - echo "$KUBE_CA_PEM" > ca.crt
-#     - kubectl config set-cluster k8s-cluster --server=https://gitlab.anhmh.cloud/ --certificate-authority=ca.crt --embed-certs=true
-#     - kubectl config set-credentials deployer --token=$KUBE_TOKEN
-#     - kubectl config set-context $KUBE_CONTEXT --cluster=k8s-cluster --user=deployer --namespace=$KUBE_NAMESPACE
-#     - kubectl config use-context $KUBE_CONTEXT
-
-#     # Deploy Helm chart
-#     - helm upgrade --install $RELEASE_NAME $HELM_CHART_PATH \
-#         --namespace $KUBE_NAMESPACE \
-#         --set image.repository=$CI_REGISTRY_IMAGE \
-#         --set image.tag=$CI_COMMIT_SHORT_SHA \
-#         --atomic
-#   only:
-#     - main
+    # Deploy Helm chart
+    - helm upgrade --install $RELEASE_NAME $HELM_CHART_PATH \
+        --namespace $KUBE_NAMESPACE \
+        --set image.repository=$CI_REGISTRY_IMAGE \
+        --set image.tag=$CI_COMMIT_SHORT_SHA \
+        --atomic
+  # only:
+  #   - main
