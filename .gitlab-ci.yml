@@ -4,9 +4,7 @@ print-env:
     - echo "Các biến CI/CD có sẵn:"
     - printenv | sort
   tags:
-    - kubernetes
-
-  
+    - shell
 
 # stages:
 #   - build
