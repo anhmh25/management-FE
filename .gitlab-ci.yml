@@ -7,7 +7,7 @@
 #     - shell
 
 stages:
-  - build-and-push
+  - build
   - deploy
 
 variables:
