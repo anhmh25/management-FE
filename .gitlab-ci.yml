@@ -39,17 +39,10 @@ deploy:
     - kubectl config set-cluster k8s-cluster --server=$KUBE_API --certificate-authority=ca.crt --embed-certs=true
 
     - kubectl config set-credentials deployer --token=$KUBE_TOKEN
-    - kubectl config set-context $KUBE_CONTEXT \
-        --cluster=k8s-cluster \
-        --user=deployer \
-        --namespace=$KUBE_NAMESPACE
+    - kubectl config set-context $KUBE_CONTEXT --cluster=k8s-cluster --user=deployer --namespace=$KUBE_NAMESPACE
     - kubectl config use-context $KUBE_CONTEXT
 
     # Deploy Helm chart, dùng Docker Hub image
-    - helm upgrade --install $RELEASE_NAME $HELM_CHART_PATH \
-        --namespace $KUBE_NAMESPACE \
-        --set image.repository=$DOCKERHUB_USERNAME/management-fe \
-        --set image.tag=$CI_COMMIT_SHORT_SHA \
-        --atomic
+    - helm upgrade --install $RELEASE_NAME $HELM_CHART_PATH --namespace $KUBE_NAMESPACE --set image.repository=$DOCKERHUB_USERNAME/management-fe --set image.tag=$CI_COMMIT_SHORT_SHA --atomic
   # only:
   #   - main
