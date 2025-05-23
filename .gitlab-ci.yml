@@ -37,7 +37,7 @@ deploy:
 
     # Cấu hình kubeconfig để kết nối cụm K8s
     - kubectl config set-cluster k8s-cluster \
-        --server=$KUBE_API_SERVER \
+        --server=$KUBE_API \
         --certificate-authority=ca.crt \
         --embed-certs=true
 
