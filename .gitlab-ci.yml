@@ -31,7 +31,6 @@ deploy:
   stage: deploy
   image:
     name: alpine/helm:3.14.0
-    entrypoint: [""]
   script:
     - echo "$KUBE_CA_PEM" > ca.crt
 
