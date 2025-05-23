@@ -3,7 +3,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -18,13 +18,12 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 COPY --from=builder /app/package*.json ./
-RUN npm install --omit=dev
 
 # Copy build và public vào container
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 
 EXPOSE 3000
 
