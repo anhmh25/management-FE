@@ -30,7 +30,7 @@ variables:
 deploy:
   stage: deploy
   image:
-    name: alpine/helm:3.14.0
+    name: lachlanevenson/k8s-helm:v3.14.0
   script:
     - helm version
     - echo "$KUBE_CA_PEM" > ca.crt
