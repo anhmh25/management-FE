@@ -6,7 +6,7 @@
 #   tags:
 #     - shell
 stages:
-  - build
+  # - build
   - deploy
 
 variables:
@@ -15,17 +15,17 @@ variables:
   HELM_CHART_PATH: ./helm-chart/management-FE
   KUBE_CONTEXT: gitlab-context
 
-build-and-push:
-  stage: build
-  image: docker:20.10.16
-  services:
-    - name: docker:20.10.16-dind
-      alias: docker
-  before_script:
-    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-  script:
-    - docker build -t "$IMAGE_TAG" .
-    - docker push "$IMAGE_TAG"
+# build-and-push:
+#   stage: build
+#   image: docker:20.10.16
+#   services:
+#     - name: docker:20.10.16-dind
+#       alias: docker
+#   before_script:
+#     - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+#   script:
+#     - docker build -t "$IMAGE_TAG" .
+#     - docker push "$IMAGE_TAG"
 
 deploy:
   stage: deploy
@@ -36,10 +36,7 @@ deploy:
     - echo "$KUBE_CA_PEM" > ca.crt
 
     # Cấu hình kubeconfig để kết nối cụm K8s
-    - kubectl config set-cluster k8s-cluster \
-        --server=$KUBE_API \
-        --certificate-authority=ca.crt \
-        --embed-certs=true
+    - kubectl config set-cluster k8s-cluster --server=$KUBE_API --certificate-authority=ca.crt --embed-certs=true
 
     - kubectl config set-credentials deployer --token=$KUBE_TOKEN
     - kubectl config set-context $KUBE_CONTEXT \
