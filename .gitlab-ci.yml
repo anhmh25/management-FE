@@ -5,7 +5,6 @@
 #     - printenv | sort
 #   tags:
 #     - shell
-
 stages:
   - build
   - deploy
