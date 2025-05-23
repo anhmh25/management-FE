@@ -22,10 +22,6 @@ build-and-push:
   services:
     - name: docker:20.10.16-dind
       alias: docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
-    IMAGE_TAG: $DOCKERHUB_USERNAME/management-fe:$CI_COMMIT_SHORT_SHA
   before_script:
     - docker info
     - docker version
