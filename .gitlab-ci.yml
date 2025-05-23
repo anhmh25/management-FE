@@ -32,7 +32,7 @@ deploy:
   image:
     name: alpine/helm:3.14.0
   script:
-    - which helm
+    - helm version
     - echo "$KUBE_CA_PEM" > ca.crt
 
     # Cấu hình kubeconfig để kết nối cụm K8s
