@@ -18,14 +18,17 @@ variables:
 
 build-and-push:
   stage: build
-  image: docker:latest
+  image: docker:20.10.16
   services:
-    - docker:dind
+    - name: docker:20.10.16-dind
+      alias: docker
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_TLS_CERTDIR: ""
     IMAGE_TAG: $DOCKERHUB_USERNAME/management-fe:$CI_COMMIT_SHORT_SHA
   before_script:
+    - docker info
+    - docker version
     - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
   script:
     - docker build -t "$IMAGE_TAG" .
