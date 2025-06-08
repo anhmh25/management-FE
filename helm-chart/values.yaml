@@ -1,4 +1,14 @@
 replicaCount: 1
+fullname: management-fe
+labels: 
+  app: management-fe
+  chart: management-fe
+  release: new
+  heritage: Helm
+
+selectorLabels:
+  app: management-fe
+  release: new
 
 image:
   repository: anhmhtera/management-fe

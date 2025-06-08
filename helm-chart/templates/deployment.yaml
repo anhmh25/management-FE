@@ -1,22 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "management-FE.fullname" . }}
+  name: {{ .Values.fullname }}
   labels:
-    app: {{ include "management-FE.name" . }}
+    {{- toYaml .Values.labels | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "management-FE.name" . }}
+      {{- toYaml .Values.selectorLabels | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ include "management-FE.name" . }}
+        {{- toYaml .Values.selectorLabels | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- if .Values.resources }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
