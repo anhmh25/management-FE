@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/anhmhtera/management-fe
-  tag: latest
+  repository: anhmhtera/management-fe
+  tag: d6b51dc4
   pullPolicy: Always
 
 service:
