@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: docker.io/anhmhtera/management-fe
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: NodePort
