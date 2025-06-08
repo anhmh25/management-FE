@@ -1,12 +1,13 @@
 replicaCount: 1
 
 image:
-  repository: registry.gitlab.com/gitlab-deploy/management-FE
+  repository: docker.io/anhmhtera/management-fe
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
+  nodePort: 30080
 
 resources: {}
