@@ -8,7 +8,7 @@ export default function Home() {
           Discover the features and benefits of our amazing product. It's fast, reliable and easy to use.
         </p>
         <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
-          Get Started
+          Get Started Now
         </button>
       </section>
 
